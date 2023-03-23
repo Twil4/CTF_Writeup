@@ -8,7 +8,7 @@ Dùng IDA dịch thì thấy hàm getFlag ở lựa chọn 1:
 
 ![free.png](photo/free.png)
 
-Tiếp tục đọc source thì thấy ở lựa chọn 6 và 7 đều free nhưng không loại bỏ con troe đến đoạn giải phóng -> Use after free
+Tiếp tục đọc source thì thấy ở lựa chọn 6 và 7 đều free nhưng không loại bỏ con trỏ đến đoạn giải phóng -> Use after free
 
 ![var.png](photo/var.png)
 
@@ -62,6 +62,15 @@ Việc bây giờ là lấy địa chỉ hàm getFlag đưa vào biến User và
 ```
 getFlag = 0x40084a
 editStudent(p64(0) + p64(getFlag))
+```
+
+![fgetFlag.png](photo/fgetFlag.png)
+
+![fake1.png](photo/fake1.png)
+
+Ta thấy địa chỉ hàm getFlag đã nằm trong data của chunk và bây giờ chỉ cần sử dụng hàm in đã có sẵn để in ra
+
+```
 print(printAdmin())
 ```
 

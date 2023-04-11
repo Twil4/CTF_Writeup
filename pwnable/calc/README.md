@@ -155,7 +155,7 @@ Sau khi đọc hiểu sơ sơ được code thì chạy lại file và test:
 
 Xem lại hàm parse_expr thì thấy lúc nhập '+10' thì chỉ có số 10 được thêm là mảng chứa số để tính thì thực hiện phần lệnh sau.
 
-![gets2.png](photo/gets2.png)
+![get2.png](photo/get2.png)
 
 ```a1[*a1 - 1] += a1[*a1];```
 

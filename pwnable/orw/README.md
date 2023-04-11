@@ -8,7 +8,7 @@ orw: ELF 32-bit LSB executable, Intel 80386, version 1 (SYSV), dynamically linke
 
 Là file ELF 32bit -> Mở bằng IDA ta có source như sau:
 
-![leak.png](photo/leak.png)
+![main.png](photo/main.png)
 
 Chương trình cho phép mình nhập vào 1 chuỗi và thực thi chuỗi mình nhập vào.
 

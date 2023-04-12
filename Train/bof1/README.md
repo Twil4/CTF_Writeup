@@ -59,7 +59,7 @@ Nhập tràn biến buf gồm 16 byte rác sau đó thay đổi giá trị biế
 0x000000000040122c <+79>:    mov    rsi,rax
 0x000000000040122f <+82>:    mov    edi,0x0
 0x0000000000401234 <+87>:    call   0x4010a0 <read@plt>
-``
+```
 
 Biến buf cách rbp là 0x30.
 

